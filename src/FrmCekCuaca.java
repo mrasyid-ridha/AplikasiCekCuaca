@@ -73,58 +73,6 @@ lblIkon.setIcon(new ImageIcon(getClass().getResource(iconPath)));
     // Tambah ke tabel
     model.addRow(new Object[]{city, kondisi, suhu});
 }
-
-    private void btnCekActionPerformed(java.awt.event.ActionEvent evt) {                                        
-    String city = txtKota.getText().trim();
-    if (city.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "Masukkan nama kota terlebih dahulu!");
-        return;
-    }
-    tampilkanCuaca(city);
-}                                       
-
-private void btnSimpanFavoritActionPerformed(java.awt.event.ActionEvent evt) {                                                
-    String city = txtKota.getText().trim();
-    if (!city.isEmpty() && !favorit.contains(city)) {
-        favorit.add(city);
-        cmbFavorit.addItem(city);
-        JOptionPane.showMessageDialog(this, "Kota ditambahkan ke favorit!");
-    }
-}                                               
-
-private void cmbFavoritItemStateChanged(java.awt.event.ItemEvent evt) {                                            
-    if (evt.getStateChange() == java.awt.event.ItemEvent.SELECTED) {
-        String selectedCity = cmbFavorit.getSelectedItem().toString();
-        tampilkanCuaca(selectedCity);
-    }
-}                                           
-
-private void btnSimpanCSVActionPerformed(java.awt.event.ActionEvent evt) {                                            
-    try (PrintWriter writer = new PrintWriter(new File("data_cuaca.csv"))) {
-        for (int i = 0; i < model.getRowCount(); i++) {
-            writer.println(model.getValueAt(i, 0) + "," +
-                           model.getValueAt(i, 1) + "," +
-                           model.getValueAt(i, 2));
-        }
-        JOptionPane.showMessageDialog(this, "Data cuaca disimpan ke data_cuaca.csv");
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, "Gagal menyimpan file: " + e.getMessage());
-    }
-}                                           
-
-private void btnMuatCSVActionPerformed(java.awt.event.ActionEvent evt) {                                          
-    try (BufferedReader reader = new BufferedReader(new FileReader("data_cuaca.csv"))) {
-        model.setRowCount(0);
-        String line;
-        while ((line = reader.readLine()) != null) {
-            model.addRow(line.split(","));
-        }
-        JOptionPane.showMessageDialog(this, "Data cuaca dimuat kembali!");
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, "Gagal memuat file: " + e.getMessage());
-    }
-}                                         
-
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FrmCekCuaca.class.getName());
 
     /**
@@ -162,10 +110,25 @@ private void btnMuatCSVActionPerformed(java.awt.event.ActionEvent evt) {
         lblKota.setText("Masukkan Nama Kota");
 
         btnCek.setText("Cek Cuaca");
+        btnCek.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCekActionPerformed(evt);
+            }
+        });
 
         cmbFavorit.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Banjarmasin", "Bandung", "Jakarta" }));
+        cmbFavorit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbFavoritActionPerformed(evt);
+            }
+        });
 
         btnSimpanFavorit.setText("Simpan Favorit");
+        btnSimpanFavorit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSimpanFavoritActionPerformed(evt);
+            }
+        });
 
         tblData.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -181,8 +144,18 @@ private void btnMuatCSVActionPerformed(java.awt.event.ActionEvent evt) {
         jScrollPane1.setViewportView(tblData);
 
         btnSimpanCSV.setText("Simpan CSV");
+        btnSimpanCSV.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSimpanCSVActionPerformed(evt);
+            }
+        });
 
         btnMuatCSV.setText("Muat CSV");
+        btnMuatCSV.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMuatCSVActionPerformed(evt);
+            }
+        });
 
         lblHasil.setText("Kondisi Cuaca:");
 
@@ -248,7 +221,7 @@ private void btnMuatCSVActionPerformed(java.awt.event.ActionEvent evt) {
                 .addGap(18, 18, 18)
                 .addComponent(lblHasil)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblIkon, javax.swing.GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
+                .addComponent(lblIkon, javax.swing.GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 331, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -260,6 +233,75 @@ private void btnMuatCSVActionPerformed(java.awt.event.ActionEvent evt) {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnCekActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCekActionPerformed
+    String city = txtKota.getText().trim();
+    if (city.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Masukkan nama kota!");
+        return;
+    }
+    tampilkanCuaca(city);                                    
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnCekActionPerformed
+
+    private void btnSimpanFavoritActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanFavoritActionPerformed
+    String city = txtKota.getText().trim();
+    if (city.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Isi kolom kota terlebih dahulu.");
+        return;
+    }
+
+    cmbFavorit.addItem(city);
+    JOptionPane.showMessageDialog(this, "Kota ditambahkan ke favorit!");
+    }//GEN-LAST:event_btnSimpanFavoritActionPerformed
+
+    private void cmbFavoritActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbFavoritActionPerformed
+                                     
+   if (cmbFavorit.getSelectedItem() == null) return;
+    String city = cmbFavorit.getSelectedItem().toString();
+    tampilkanCuaca(city);
+    }//GEN-LAST:event_cmbFavoritActionPerformed
+
+    private void btnSimpanCSVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanCSVActionPerformed
+try {
+        FileWriter file = new FileWriter("data_cuaca.csv");
+
+        file.write("Kota,Kondisi,Suhu\n");
+
+        for (int i = 0; i < model.getRowCount(); i++) {
+            file.write(model.getValueAt(i, 0) + "," +
+                       model.getValueAt(i, 1) + "," +
+                       model.getValueAt(i, 2) + "\n");
+        }
+
+        file.close();
+        JOptionPane.showMessageDialog(this, "Data berhasil disimpan ke CSV!");
+
+    } catch (IOException e) {
+        JOptionPane.showMessageDialog(this, "Gagal simpan CSV: " + e.getMessage());
+    }        // TODO add your handling code here:
+    }//GEN-LAST:event_btnSimpanCSVActionPerformed
+
+    private void btnMuatCSVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMuatCSVActionPerformed
+ try {
+        BufferedReader br = new BufferedReader(new FileReader("data_cuaca.csv"));
+        String line;
+
+        model.setRowCount(0);
+        br.readLine(); // lewati header
+
+        while ((line = br.readLine()) != null) {
+            String[] data = line.split(",");
+            model.addRow(data);
+        }
+
+        br.close();
+        JOptionPane.showMessageDialog(this, "CSV berhasil dimuat!");
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Gagal membaca CSV: " + e.getMessage());
+    } // TODO add your handling code here:
+    }//GEN-LAST:event_btnMuatCSVActionPerformed
 
     /**
      * @param args the command line arguments
